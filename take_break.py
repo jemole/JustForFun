@@ -7,10 +7,10 @@ and dance for a couple of minutes :-)
 import webbrowser
 import time
 
-count = 0
-print("This program started on " + time.ctime())
-while (count<3):
-    time.sleep(1*3600)
+nbreaks = 0
+print "This program started on " + time.ctime()
+while nbreaks < 3:
+    time.sleep(3600)
     webbrowser.open("https://youtu.be/kS-zK1S5Dws?t=12s")
-    count = count + 1
+    nbreaks = nbreaks + 1
 
