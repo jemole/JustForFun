@@ -13,6 +13,16 @@ def getKey(item):
     """
     return item[0]
 
+def blackOrWhite(color):
+    """
+            Check if color is black or white
+    """
+    if (color[0] == 255 and color[1] == 255 and color [2] == 255):
+        return 1
+    elif (color[0] == 0 and color[1] == 0 and color [2] == 0):
+        return 2
+    return 0
+
 def most_frequent(img):
     """
             Compute the most frequent color in img.
@@ -24,8 +34,9 @@ def most_frequent(img):
     pixels = image.getcolors(w * h)
     most_frequent_pixel = pixels[0]
     for count, colour in pixels:
-        if count > most_frequent_pixel[0]:
-            most_frequent_pixel = (count, colour)
+        if not blackOrWhite(colour):
+            if count > most_frequent_pixel[0]:
+                most_frequent_pixel = (count, colour)
     rgb = []
     for i in range(3):
         rgb.append (most_frequent_pixel[1][i])
