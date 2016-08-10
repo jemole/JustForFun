@@ -41,8 +41,6 @@ def most_frequent(img):
     for i in range(3):
         rgb.append (most_frequent_pixel[1][i])
     trgb = tuple(rgb)
-    if (img == '35.png'):
-        print trgb
     trgb = '#%02x%02x%02x' % trgb #Transform rgb to Hex color (HTML)
     return trgb
 
@@ -54,7 +52,7 @@ for file in os.listdir(os.getcwd()):
         element.append(most_frequent(file))
         colors.append(element)
         element = []
-print colors
+#print colors
 
 f = open('colors.html','w')
 
