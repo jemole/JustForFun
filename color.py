@@ -57,7 +57,7 @@ for i in sorted(colors, key=getKey):
 message = message + """
   </tr>
   <tr>"""
-for i in colors:
+for i in sorted(colors, key=getKey):
     message = message + '<td bgcolor="' + str(i[1]) + '"><font color="' + str(i[1]) + '">.....</td>'
 message = message + """
   </tr>
