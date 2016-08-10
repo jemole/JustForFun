@@ -9,13 +9,13 @@ import os
 
 def getKey(item):
     """
-            Used to sort the list of files and colors
+        Used to sort the list of files and colors
     """
     return item[0]
 
 def blackOrWhite(color):
     """
-            Check if color is black or white
+        Check if color is black (1) or white (2) or otherwise (0)
     """
     if (color[0] == 255 and color[1] == 255 and color [2] == 255):
         return 1
@@ -23,11 +23,20 @@ def blackOrWhite(color):
         return 2
     return 0
 
+def warmOrCool(rgb):
+    """
+        Check if color is warm or cool 
+    """
+    if rgb[0] > rgb[2]:
+        return "Warm"
+    else:
+        return "Cool"
+
 def most_frequent(img):
     """
-            Compute the most frequent color in img.
-            Code adapted from 
-            http://blog.zeevgilovitz.com/detecting-dominant-colours-in-python/
+        Compute the most frequent color in img.
+        Code adapted from 
+        http://blog.zeevgilovitz.com/detecting-dominant-colours-in-python/
     """
     image = Image.open(img)
     w, h = image.size
@@ -40,16 +49,19 @@ def most_frequent(img):
     rgb = []
     for i in range(3):
         rgb.append (most_frequent_pixel[1][i])
-    trgb = tuple(rgb)
-    trgb = '#%02x%02x%02x' % trgb #Transform rgb to Hex color (HTML)
-    return trgb
+    return tuple(rgb)
+    #trgb = '#%02x%02x%02x' % trgb #Transform rgb to Hex color (HTML)
+    #return trgb
 
 colors = []
 element = []
 for file in os.listdir(os.getcwd()):
     if file.endswith(".png"):
         element.append(str(file))
-        element.append(most_frequent(file))
+        #element.append(most_frequent(file))
+        mf = most_frequent(file)
+        element.append('#%02x%02x%02x' % mf)
+        element.append(warmOrCool(mf))
         colors.append(element)
         element = []
 #print colors
@@ -70,8 +82,24 @@ for i in sorted(colors, key=getKey):
     message = message + '<td bgcolor="' + str(i[1]) + '"><font color="' + str(i[1]) + '">.....</td>'
 message = message + """
   </tr>
+  <tr>"""
+for i in sorted(colors, key=getKey):
+    message = message + '<td><small>' + str(i[2]) + '</small></td>'
+message = message + """
+  </tr>
 </table>
+<br>"""
+warm = 0
+cool = 0
 
+for i in colors:
+    if i[2] == "Warm":
+        warm += 1
+    else:
+        cool += 1
+message = message + '<p><small>Number of pictures with warm color: ' + str(warm) + '</small></p>'
+message = message + '<p><small>Number of pictures with cool color: ' + str(cool) + '</small></p>'
+message = message + """
 </body>
 </html>"""
 
