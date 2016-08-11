@@ -6,6 +6,8 @@
 
 from PIL import Image
 import os
+import webcolors
+from collections import Counter
 
 def getKey(item):
     """
@@ -31,6 +33,29 @@ def warmOrCool(rgb):
         return "Warm"
     else:
         return "Cool"
+
+def closest_colour(requested_colour):
+    """
+        Return the name of the closest color
+    """
+    min_colours = {}
+    for key, name in webcolors.css3_hex_to_names.items():
+        r_c, g_c, b_c = webcolors.hex_to_rgb(key)
+        rd = (r_c - requested_colour[0]) ** 2
+        gd = (g_c - requested_colour[1]) ** 2
+        bd = (b_c - requested_colour[2]) ** 2
+        min_colours[(rd + gd + bd)] = name
+    return min_colours[min(min_colours.keys())]
+
+def get_colour_name(requested_colour):
+    """
+        Return the name of the color
+    """
+    try:
+        closest_name = webcolors.rgb_to_name(requested_colour)
+    except ValueError:
+        closest_name = closest_colour(requested_colour)
+    return closest_name
 
 def most_frequent(img):
     """
@@ -62,6 +87,7 @@ for file in os.listdir(os.getcwd()):
         mf = most_frequent(file)
         element.append('#%02x%02x%02x' % mf)
         element.append(warmOrCool(mf))
+        element.append(get_colour_name(mf))
         colors.append(element)
         element = []
 #print colors
@@ -86,6 +112,10 @@ message = message + """
 for i in sorted(colors, key=getKey):
     message = message + '<td><small>' + str(i[2]) + '</small></td>'
 message = message + """
+  </tr>"""
+for i in sorted(colors, key=getKey):
+    message = message + '<td><small>' + str(i[3]) + '</small></td>'
+message = message + """
   </tr>
 </table>
 <br>"""
@@ -99,6 +129,12 @@ for i in colors:
         cool += 1
 message = message + '<p><small>Number of pictures with warm color: ' + str(warm) + '</small></p>'
 message = message + '<p><small>Number of pictures with cool color: ' + str(cool) + '</small></p>'
+
+colorList = [x[3] for x in colors]
+color_counts = Counter(colorList)
+
+message = message + '<p><small>Most common colors: ' + str(color_counts.most_common(3)) + '</small></p>'
+
 message = message + """
 </body>
 </html>"""
